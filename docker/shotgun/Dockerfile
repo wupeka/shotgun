@@ -23,7 +23,7 @@ RUN \
 RUN \
 	git clone https://github.com/tomaskrizek/dnsjit.git && \
 	cd dnsjit && \
-	git checkout simulator && \
+	git checkout 27bc9fe346d1a793a643cb970c5432614b1eac0c && \
 	./autogen.sh && \
 	./configure --disable-dependency-tracking && \
 	make && \
