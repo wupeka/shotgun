@@ -13,7 +13,8 @@ import matplotlib
 from matplotlib.ticker import MultipleLocator
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt  # noqa
-
+from pylab import rcParams
+rcParams['figure.figsize'] = 40, 30
 
 JSON_VERSION = 20191111
 
@@ -74,11 +75,12 @@ def init_plot(title):
     ax.set_title(title)
 
     ax.grid(True, axis='x', which='major')
+    ax.yaxis.set_data_interval(0,100)
 
     ax.yaxis.set_major_locator(MultipleLocator(10))
     ax.grid(True, axis='y', which='major')
-
-    ax.yaxis.set_minor_locator(MultipleLocator(2))
+    ax.axis([0,120,0,100])
+    ax.yaxis.set_minor_locator(MultipleLocator(1))
     ax.grid(True, axis='y', which='minor', linestyle='dashed', color='#DDDDDD')
 
     return ax
@@ -125,7 +127,7 @@ def main():
     parser.add_argument('json_file', nargs='+', help='Shotgun results JSON file(s)')
     parser.add_argument('-t', '--title', default='Response Rate over Time',
                         help='Graph title')
-    parser.add_argument('-o', '--output', default='response_rate.svg',
+    parser.add_argument('-o', '--output', default='response_rate.png',
                         help='Output graph filename')
     parser.add_argument('-r', '--rcode', nargs='*', type=int,
                         help='RCODE(s) to plot in addition to answer rate')
@@ -159,11 +161,6 @@ def main():
         label = '{} ({} QPS)'.format(dirname, siname(qps))
         min_timespan = data['stats_interval_ms'] / 2
 
-        plot_response_rate(
-            ax,
-            data,
-            label,
-            min_timespan=min_timespan)
 
         if args.rcode:
             for rcode in args.rcode:
@@ -186,8 +183,9 @@ def main():
     set_axes_limits(ax)
 
     plt.legend()
+    fig = matplotlib.pyplot.gcf()
+    fig.set_size_inches(18.5, 10.5)
     plt.savefig(args.output)
-
 
 if __name__ == '__main__':
     main()
